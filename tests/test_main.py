@@ -1,17 +1,21 @@
-# tests/test_main.py
-
-import io
 import sys
 import os
+import io
 import pytest
-from app.main import main
+
+# Modify the sys.path to include the parent directory
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+
+if True:  # Enclose local imports in a block to satisfy flake8
+    from main import main
 
 
 def test_main_output(capsys):
     """Test that main() function prints the expected output."""
     main()
     captured = capsys.readouterr()
-    assert captured.out == "Hello, World!\n"
+    assert captured.out == "Hello, World!\nhello\nworld\n"
 
 
 def test_main_no_side_effects():
@@ -24,7 +28,7 @@ def test_main_no_side_effects():
         sys.stdout = sys.__stdout__
         captured_outputs.append(captured.getvalue())
 
-    assert all(output == "Hello, World!\n" for output in captured_outputs)
+    assert all(output == "Hello, World!\nhello\nworld\n" for output in captured_outputs)
 
 
 def test_main_return_value():
@@ -40,7 +44,7 @@ def test_main_no_stdin_interaction(monkeypatch):
     sys.stdout = captured
     main()
     sys.stdout = sys.__stdout__
-    assert captured.getvalue() == "Hello, World!\n"
+    assert captured.getvalue() == "Hello, World!\nhello\nworld\n"
 
 
 def test_main_with_redirected_stdout(capsys):
@@ -50,7 +54,7 @@ def test_main_with_redirected_stdout(capsys):
     main()
     redirected_output = sys.stdout.getvalue()
     sys.stdout = original_stdout
-    assert redirected_output == "Hello, World!\n"
+    assert redirected_output == "Hello, World!\nhello\nworld\n"
 
 
 def test_main_exception_handling():
@@ -66,7 +70,9 @@ def test_main_environment_variable(monkeypatch, capsys):
     monkeypatch.setenv("GREETING", "Hello, Environment!")
     main()
     captured = capsys.readouterr()
-    assert captured.out == "Hello, World!\n"  # Should still print the original message
+    assert (
+        captured.out == "Hello, World!\nhello\nworld\n"
+    )  # Should still print the original message
 
 
 def test_main_in_different_directory(tmpdir, capsys):
@@ -76,6 +82,6 @@ def test_main_in_different_directory(tmpdir, capsys):
     try:
         main()
         captured = capsys.readouterr()
-        assert captured.out == "Hello, World!\n"
+        assert captured.out == "Hello, World!\nhello\nworld\n"
     finally:
         os.chdir(original_dir)

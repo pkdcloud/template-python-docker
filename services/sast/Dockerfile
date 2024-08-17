@@ -1,7 +1,13 @@
-FROM python:slim
+ARG BASE_IMAGE
 
-RUN pip install bandit
+FROM ${BASE_IMAGE}
 
-WORKDIR /app
+ARG TOOL
+ARG TOOL_VERSION
 
-ENTRYPOINT ["bandit", "-r", "/app"]
+COPY ./app /app
+COPY ./tests /app/tests
+COPY ./services/sast/requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+RUN pip install ${TOOL}==${TOOL_VERSION}

@@ -1,17 +1,20 @@
-FROM python:slim
+ARG BASE_IMAGE
 
-ARG TEST_FRAMEWORK=pytest
-ARG TEST_FRAMEWORK_VERSION=8.3.2
-ARG TEST_CONFIG_FILE=pytest.ini
+FROM ${BASE_IMAGE}
 
-RUN pip install ${TEST_FRAMEWORK}==${TEST_FRAMEWORK_VERSION}
+ARG TOOL
+ARG TOOL_VERSION
 
-WORKDIR /app
+#ENV PYTHONPATH /app
 
-COPY ${TEST_CONFIG_FILE} .
-COPY requirements.txt .
+RUN apk add --no-cache bash coreutils
 
-RUN pip install -r requirements.txt
+COPY ./app /app
+COPY ./tests /app/tests
+COPY ./services/test/pytest.ini /app/pytest.ini
+COPY ./services/test/requirements.txt /app/requirements.txt
 
-ENTRYPOINT ["pytest"]
-CMD ["."]
+RUN pip install -r /app/requirements.txt
+RUN pip install ${TOOL}==${TOOL_VERSION}
+
+#WORKDIR /app

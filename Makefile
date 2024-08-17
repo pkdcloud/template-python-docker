@@ -1,4 +1,4 @@
-.PHONY: lint format test publish shell clean help check sast
+.PHONY: lint format test publish shell clean help check sast debug-test
 
 COMPOSE_RUNNER := docker compose
 APP_NAME := app
@@ -9,8 +9,8 @@ export APP_NAME
 
 define run
 	@echo "[INFO] Building with cache: $(USE_DOCKER_CACHE)"
-    $(COMPOSE_RUNNER) build $(if $(filter false,$(USE_DOCKER_CACHE)),--no-cache,) $1
-    $(COMPOSE_RUNNER) run --rm $1
+	$(COMPOSE_RUNNER) build $(if $(filter false,$(USE_DOCKER_CACHE)),--no-cache,) $1
+	$(COMPOSE_RUNNER) run --rm $1
 endef
 
 lint format test publish sast:
@@ -23,7 +23,6 @@ shell:
 	read -p "Enter service name: " service; \
 	echo "Opening shell in $$service"; \
 	$(COMPOSE_RUNNER) run --rm -it --entrypoint /bin/sh $$service
-
 
 check: ## Run format, lint, and test in sequence
 	@echo "Running format..."

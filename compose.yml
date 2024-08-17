@@ -15,7 +15,6 @@ services:
         TOOL: flake8
         TOOL_VERSION: 7.1.1
     entrypoint: ["flake8"]
-    command: ["/app"]
     working_dir: /app
     container_name: lint
 
@@ -35,22 +34,30 @@ services:
     working_dir: /app
     container_name: format
 
-
   test:
     build:
-      context: ./services/test
-      dockerfile: Dockerfile
-    volumes:
-      - ./app:/app
-      - ./tests:/app/tests
-    environment:
-      - PYTHONPATH=/app
+      context: .
+      dockerfile: ./services/test/Dockerfile
+      args:
+        BASE_IMAGE: python:alpine
+        TOOL: pytest
+        TOOL_VERSION: 8.3.2
+    entrypoint: ["pytest"]
+    working_dir: /app
     container_name: test
 
   sast:
     build:
-      context: ./services/sast
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/sast/Dockerfile
+      args:
+        BASE_IMAGE: python:alpine
+        TOOL: bandit
+        TOOL_VERSION: 1.7.5
     volumes:
       - ./app:/app
-    container_name: sast
+      - ./tests:/tests
+    entrypoint: ["bandit"]
+    command: ["-r", "/app"]
+    working_dir: /app
+    container_name: bandit
