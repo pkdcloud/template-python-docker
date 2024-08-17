@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: app:latest
+    container_name: app
+
+  lint:
+    build:
+      context: .
+      dockerfile: ./services/lint/Dockerfile
+      args:
+        BASE_IMAGE: python:alpine
+        TOOL: flake8
+        TOOL_VERSION: 7.1.1
+    entrypoint: ["flake8"]
+    command: ["/app"]
+    working_dir: /app
+    container_name: lint
+
+  format:
+    build:
+      context: .
+      dockerfile: ./services/format/Dockerfile
+      args:
+        BASE_IMAGE: python:alpine
+        TOOL: black
+        TOOL_VERSION: 23.3.0
+    volumes:
+      - ./app:/app
+      - ./tests:/tests
+    entrypoint: ["black"]
+    command: ["/app", "/tests"]
+    working_dir: /app
+    container_name: format
+
+
+  test:
+    build:
+      context: ./services/test
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/app
+      - ./tests:/app/tests
+    environment:
+      - PYTHONPATH=/app
+    container_name: test
+
+  sast:
+    build:
+      context: ./services/sast
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/app
+    container_name: sast
