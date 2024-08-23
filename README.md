@@ -1,6 +1,6 @@
 # Python Docker Template
 
-This project provides a template for creating, formatting, linting, testing, sast scanning and publishing Python applications using Docker.
+This project provides a template for creating, formatting, linting, testing, SAST scanning, and publishing Python applications using Docker.
 
 ## Tools Used
 
@@ -26,13 +26,15 @@ This project provides a template for creating, formatting, linting, testing, sas
 Here are the available commands you can use with `make`:
 
 ```
-make lint      Run linter
-make format    Run formatter
-make test      Run tests
+make run       Run the application
+make lint      Run the linter
+make format    Run the formatter
+make test      Run the tests
 make publish   Publish the application
+make sast      Run SAST (Static Application Security Testing)
 make shell     Open a shell in a specific service (prompts for service name)
 make clean     Remove all Docker resources related to this project
-make check     Run format, lint, and test in sequence
+make simulate  Simulate a pipeline run (format, lint, test, sast)
 make help      Display this help message
 ```
 
@@ -52,17 +54,18 @@ The `shell` command is interactive. When you run `make shell`, you'll be prompte
 
 ```bash
 $ make shell
+Available services: ["app", "format", "lint", "sast", "test"]
 Enter service name: app
 Opening shell in app
 # You're now in a shell inside the 'app' service
 ```
 
-### The `check` Command
+### The `simulate` Command
 
-The `check` command runs `format`, `lint`, and `test` in sequence. This is useful for quickly checking your code before committing or deploying.
+The `simulate` command runs `format`, `lint`, `test`, and `sast` in sequence. This is useful for simulating a complete pipeline run locally before committing or deploying your code.
 
 ```bash
-make check
+make simulate
 ```
 
 ## Docker Cache and Building
@@ -169,10 +172,20 @@ You can run the tests using the following command:
 make test
 ```
 
+## Debugging
+
+For debugging purposes, you can use the `debug-test` command:
+
+```bash
+make debug-test
+```
+
+This command runs the tests with debugging enabled, which can be useful for troubleshooting issues in your test suite.
+
 ## Contributing
 
-(Add your contribution guidelines here)
+TODO
 
 ## License
 
-(Add your license information here)
+This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
