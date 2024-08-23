@@ -18,7 +18,7 @@ This project provides a template for creating, formatting, linting, testing, SAS
 ## Getting Started
 
 1. Clone this repository
-2. Customize the `Dockerfile` and `compose.yml` as needed for your project
+2. Customize the `app/Dockerfile` and `compose.yml` as needed for your project
 3. Use the provided Makefile commands to manage your project
 
 ## Makefile Commands
