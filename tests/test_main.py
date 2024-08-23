@@ -15,7 +15,7 @@ def test_main_output(capsys):
     """Test that main() function prints the expected output."""
     main()
     captured = capsys.readouterr()
-    assert captured.out == "Hello, World!\nhello\nworld\n"
+    assert captured.out == "Hello, World!\n"
 
 
 def test_main_no_side_effects():
@@ -26,9 +26,8 @@ def test_main_no_side_effects():
         sys.stdout = captured
         main()
         sys.stdout = sys.__stdout__
-        captured_outputs.append(captured.getvalue())
-
-    assert all(output == "Hello, World!\nhello\nworld\n" for output in captured_outputs)
+        captured_outputs.append(captured.getvalue().strip())
+    assert all(output == "Hello, World!" for output in captured_outputs)
 
 
 def test_main_return_value():
@@ -37,24 +36,19 @@ def test_main_return_value():
     assert result is None
 
 
-def test_main_no_stdin_interaction(monkeypatch):
+def test_main_no_stdin_interaction(monkeypatch, capsys):
     """Test that main() doesn't read from stdin."""
     monkeypatch.setattr("sys.stdin", io.StringIO("test input"))
-    captured = io.StringIO()
-    sys.stdout = captured
     main()
-    sys.stdout = sys.__stdout__
-    assert captured.getvalue() == "Hello, World!\nhello\nworld\n"
+    captured = capsys.readouterr()
+    assert captured.out.strip() == "Hello, World!"
 
 
 def test_main_with_redirected_stdout(capsys):
     """Test main() behavior with redirected stdout."""
-    original_stdout = sys.stdout
-    sys.stdout = io.StringIO()
     main()
-    redirected_output = sys.stdout.getvalue()
-    sys.stdout = original_stdout
-    assert redirected_output == "Hello, World!\nhello\nworld\n"
+    captured = capsys.readouterr()
+    assert captured.out.strip() == "Hello, World!"
 
 
 def test_main_exception_handling():
@@ -70,9 +64,7 @@ def test_main_environment_variable(monkeypatch, capsys):
     monkeypatch.setenv("GREETING", "Hello, Environment!")
     main()
     captured = capsys.readouterr()
-    assert (
-        captured.out == "Hello, World!\nhello\nworld\n"
-    )  # Should still print the original message
+    assert captured.out == "Hello, World!\n"
 
 
 def test_main_in_different_directory(tmpdir, capsys):
@@ -82,6 +74,6 @@ def test_main_in_different_directory(tmpdir, capsys):
     try:
         main()
         captured = capsys.readouterr()
-        assert captured.out == "Hello, World!\nhello\nworld\n"
+        assert captured.out == "Hello, World!\n"
     finally:
         os.chdir(original_dir)

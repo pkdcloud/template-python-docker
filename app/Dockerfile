@@ -1,12 +1,12 @@
 ARG BASE_IMAGE
-
 FROM ${BASE_IMAGE}
 
-ARG TOOL
-ARG TOOL_VERSION
+COPY . /app
 
-# Copy the app and tests directories into the container
-COPY ./app /app
-COPY ./tests /app/tests
+WORKDIR /app
 
-RUN pip install ${TOOL}==${TOOL_VERSION}
+RUN pip install -r requirements.txt
+
+ENTRYPOINT ["python"]
+
+CMD ["main.py"]

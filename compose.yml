@@ -3,7 +3,8 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    image: app:latest
+      args:
+        BASE_IMAGE: python:alpine
     container_name: app
 
   lint:

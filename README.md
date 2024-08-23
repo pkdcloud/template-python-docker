@@ -1,23 +1,24 @@
 # Python Docker Template
 
-This project provides a template for creating, formatting, linting, testing, and publishing Python applications using Docker.
+This project provides a template for creating, formatting, linting, testing, sast scanning and publishing Python applications using Docker.
 
 ## Tools Used
 
 - Format: [black](https://pypi.org/project/black/)
 - Lint: [flake8](https://pypi.org/project/flake8/)
 - Test: [pytest](https://pypi.org/project/pytest/)
-
+- SAST: [bandit](https://pypi.org/project/bandit/)
+  
 ## Prerequisites
 
 - Docker
-- Docker Compose
+- Docker Compose or Compose V2 plugin for docker
 - Make
 
 ## Getting Started
 
 1. Clone this repository
-2. Customize the `Dockerfile` and `docker-compose.yml` as needed for your project
+2. Customize the `Dockerfile` and `compose.yml` as needed for your project
 3. Use the provided Makefile commands to manage your project
 
 ## Makefile Commands
