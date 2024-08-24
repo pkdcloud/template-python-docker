@@ -188,4 +188,4 @@ TODO
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
+This project is licensed under the [The Unlicense](LICENSE).
